@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/rwcarlsen/goexif/exif"
@@ -68,19 +67,18 @@ func MoveFile(source, destination string) (err error) {
 func main() {
 
 	var files []string
+
 	var now time.Time
 
-	if len(os.Args) != 4 {
-		fmt.Println("leniwiec requires arguments: source_directory destination_directory file_extensions")
-		fmt.Println("leniwiec /source/photo /destination/photo jpg,png")
+	if len(os.Args) != 3 {
+		fmt.Println("leniwiec  requires argument source_directory destination_directory")
+		fmt.Println("leniwiec  /source/photo /destination/photo")
 		fmt.Println("autor: tomek.maciorowski@gmail.com")
 		log.Fatal("try again")
 	}
 	fmt.Printf("%v", len(os.Args))
-
 	dirPath := os.Args[1]
 	My_Dest := os.Args[2]
-	extensions := strings.Split(strings.ToLower(os.Args[3]), ",")
 
 	err := filepath.Walk(dirPath,
 		func(path string, info os.FileInfo, err error) error {
@@ -89,15 +87,11 @@ func main() {
 				return err
 			}
 
-			// Sprawdź rozszerzenie pliku, ignorując wielkość liter
-			if !info.IsDir() {
-				ext := strings.ToLower(filepath.Ext(path))
-				for _, validExt := range extensions {
-					if ext == "."+validExt && info.Size() > 0 {
-						files = append(files, path)
-						fmt.Println(path)
-					}
-				}
+			//		if !info.IsDir() && filepath.Ext(path) == ".jpg" {
+			if !info.IsDir() && filepath.Ext(path) == ".jpg" && info.Size() > 0 {
+
+				files = append(files, path)
+				fmt.Println(path)
 			}
 
 			return nil
@@ -142,5 +136,7 @@ func main() {
 		dname := fmt.Sprintf("%v\\%v.jpg", My_Dest, format_name)
 		fmt.Println(dname)
 		MoveFile(element, dname)
+
 	}
+
 }
