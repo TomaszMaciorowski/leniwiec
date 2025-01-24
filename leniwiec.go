@@ -85,7 +85,7 @@ func main() {
 	err := filepath.Walk(dirPath,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
-				fmt.Println("Co jest !!!")
+				fmt.Printf("An error occurred while accessing the path %s: %v\n", path, err)
 				return err
 			}
 
@@ -104,19 +104,16 @@ func main() {
 		})
 
 	if err != nil {
-		fmt.Println("Co jest !!!")
+		fmt.Printf("Failed to walk through the directory %s: %v\n", dirPath, err)
 		log.Fatal(err)
 	}
 
 	for index, element := range files {
-		fmt.Println("Index:")
-		fmt.Println(index)
-		fmt.Println("Nazwa:")
-		fmt.Println(element)
+		fmt.Println("Index:", index, "Nazwa:", element)
 
 		f, err := os.Open(element)
 		if err != nil {
-			fmt.Println("Co jest !!!")
+			fmt.Println("Error open file:", element)
 			log.Fatal(err)
 		}
 
